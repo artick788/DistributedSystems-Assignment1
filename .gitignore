@@ -1,0 +1,5 @@
+.idea
+API/venv/
+
+Client/nmbs-router/node_modules
+Client/nmbs-router/package-lock.json
