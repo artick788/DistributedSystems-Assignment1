@@ -10,7 +10,7 @@ export default class Sidebar extends React.Component{
     render() {
         return (
         <div className={"SideBarStyle"}>
-            <Box display="flex" alignContent="center">
+            <Box className={"BoxStyle"}>
                 {this.props.children}
             </Box>
         </div>

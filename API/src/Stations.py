@@ -15,6 +15,7 @@ class StationsList(Resource):
         ret_val: [dict] = []
 
         stations: [dict] = unpacked_data["station"]
+        stations.sort(key=lambda x: x["name"], reverse=False)
         for elem in stations:
             elem_form: dict = dict()
             elem_form["Name"] = elem["name"]
