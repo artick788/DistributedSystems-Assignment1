@@ -2,8 +2,8 @@ import React from "react";
 import Sidebar from "./Utils/SideBar";
 import axios from "axios";
 import "./StationPage.css";
-import ReactTable from "react-table"
 import {Button, Divider, List, ListItem, Typography} from "@material-ui/core";
+import SearchBar from "./Utils/SearchBar";
 
 class Station{
     constructor(elementID, name, id, standardName, locX, locY) {
@@ -43,16 +43,17 @@ export default class StationPage extends React.Component{
 
         this.state = {
             stations: [],
+            stationNames: [],
             selectedStation: -1
         }
 
         this.getStations();
 
-
     }
 
     getStations(){
-        let stations = [];
+        let tempStations = [];
+        let tempNames = [];
         axios.get("/api/stations").then(response => {
             response.data.map((st, num) => {
                 const name = st.Name;
@@ -62,10 +63,11 @@ export default class StationPage extends React.Component{
                 const locY = st.LocationY;
 
                 const station = new Station(num, name, id, standardName, locX, locY);
-                stations.push(station)
+                tempStations.push(station)
+                tempNames.push(name);
             })
 
-            this.setState({stations: stations, selectedStation: this.state.selectedStation});
+            this.setState({stations: tempStations, selectedStation: this.state.selectedStation, stationNames: tempNames});
             this.forceUpdate();
 
         }).catch(

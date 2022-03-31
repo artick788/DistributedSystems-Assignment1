@@ -106,6 +106,9 @@ class NavigationBar extends React.Component{
                     <NavLink to="/stations" activeStyle>
                         Stations
                     </NavLink>
+                    <NavLink to="/routing" activeStyle>
+                        Routing
+                    </NavLink>
                     {/*<NavBtn>*/}
                     {/*    <NavBtnLink to="/sign-up">Sign Up</NavBtnLink>*/}
                     {/*</NavBtn>*/}
