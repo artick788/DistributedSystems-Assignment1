@@ -3,78 +3,19 @@ import Sidebar from "./Utils/SideBar";
 import axios from "axios";
 import "./StationPage.css";
 import {Button, Divider, List, ListItem, Typography} from "@material-ui/core";
+import {getStationInfo, Station} from "./Station"
 import SearchBar from "./Utils/SearchBar";
+import store from "./Store/Store";
 
-class Station{
-    constructor(elementID, name, id, standardName, locX, locY) {
-        this.m_Name = name;
-        this.m_ID = id;
-        this.m_StandardName = standardName;
-        this.m_LocationX = locX;
-        this.m_LocationY = locY;
-        this.m_ElementID = elementID;
-    }
-
-    onRender(){
-        return (
-            <table>
-                <th>
-                    <tr>Name</tr>
-                    <tr>Standard Name</tr>
-                    <tr>ID</tr>
-                    <tr>X coördinaat</tr>
-                    <tr>Y coördinaat</tr>
-                </th>
-                <th>
-                    <tr>{this.m_Name}</tr>
-                    <tr>{this.m_StandardName}</tr>
-                    <tr>{this.m_ID}</tr>
-                    <tr>{this.m_LocationX}</tr>
-                    <tr>{this.m_LocationY}</tr>
-                </th>
-            </table>
-        )
-    }
-}
 
 export default class StationPage extends React.Component{
     constructor(props) {
         super(props);
 
         this.state = {
-            stations: [],
-            stationNames: [],
             selectedStation: -1
         }
 
-        this.getStations();
-
-    }
-
-    getStations(){
-        let tempStations = [];
-        let tempNames = [];
-        axios.get("/api/stations").then(response => {
-            response.data.map((st, num) => {
-                const name = st.Name;
-                const standardName = st.StandardName;
-                const id = st.ID;
-                const locX = st.LocationX;
-                const locY = st.LocationY;
-
-                const station = new Station(num, name, id, standardName, locX, locY);
-                tempStations.push(station)
-                tempNames.push(name);
-            })
-
-            this.setState({stations: tempStations, selectedStation: this.state.selectedStation, stationNames: tempNames});
-            this.forceUpdate();
-
-        }).catch(
-            error => {
-                console.log(error);
-            }
-        )
     }
 
     renderStationInfo(){
@@ -86,7 +27,7 @@ export default class StationPage extends React.Component{
                     top: "50%"
                 }}>
                     {
-                        this.state.stations[this.state.selectedStation].onRender()
+                        store.getState().stations[this.state.selectedStation].renderStationOverview()
                     }
                 </div>
             )
@@ -97,8 +38,8 @@ export default class StationPage extends React.Component{
     }
 
     render() {
-        if (this.state.stations.length === 0) {
-            this.getStations();
+        if (store.getState().stations.length === 0) {
+            getStationInfo();
             return null;
         }
         else {
@@ -113,7 +54,7 @@ export default class StationPage extends React.Component{
                             </ListItem>
                             <Divider/>
                             {
-                                this.state.stations.map(
+                                store.getState().stations.map(
                                     station => {
                                         const stName = station.m_Name;
                                         return (

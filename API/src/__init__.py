@@ -4,6 +4,7 @@ from flask_restful import Api
 from flask_cors import CORS
 from .nmbs_router_api import Time, HelloNMBS
 from .Stations import *
+from .NmbsRouter import NmbsRouter
 
 
 def create_app() -> Flask:
@@ -16,5 +17,6 @@ def create_app() -> Flask:
     api.add_resource(HelloNMBS, "/api")
 
     api.add_resource(StationsList, "/api/stations")
+    api.add_resource(NmbsRouter, "/api/router/<from_station>/<to_station>")
 
     return app
