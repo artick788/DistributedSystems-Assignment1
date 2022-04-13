@@ -45,8 +45,9 @@ export default class SelectStationBar extends React.Component{
                                         return (
                                             <ListItem>
                                                 <Button className="ButtonStyle" onClick={() => {
-                                                    this.setState({...this.state, selectedStation: station.m_ElementID})
-                                                    this.props.selectedCallback(this.state.selectedStation);
+                                                    this.setState({...this.state, selectedStation: station.m_ElementID}, () => {
+                                                        this.props.selectedCallback(this.state.selectedStation);
+                                                    })
                                                 }}>
                                                     {
                                                         stName

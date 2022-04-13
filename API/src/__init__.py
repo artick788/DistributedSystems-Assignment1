@@ -2,9 +2,9 @@ from flask import Flask
 from flasgger import Swagger
 from flask_restful import Api
 from flask_cors import CORS
-from .nmbs_router_api import Time, HelloNMBS
-from .Stations import *
-from .NmbsRouter import NmbsRouter
+from .base_api import Time, HelloNMBS
+from .station_api import *
+from .routing_api import NmbsRouter
 
 
 def create_app() -> Flask:

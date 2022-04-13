@@ -95,13 +95,30 @@ class ConnectionResource:
         return uri
 
 
+
+
 class NmbsRouter(Resource):
     def get(self, from_station: str, to_station: str):
         url: str = "https://api.irail.be"
-        connRes: ConnectionResource = ConnectionResource(from_station, to_station)
+        conn_res: ConnectionResource = ConnectionResource(from_station, to_station)
 
-        url += connRes.formatURI()
+        url += conn_res.formatURI()
         response = urllib.request.urlopen(url)
         unpacked_data = json.loads(response.read())
 
-        x = 0
+        response: dict = dict()
+        response["Success"] = "false"
+        if len(unpacked_data["connection"]) > 0:
+            response["Success"] = "true"
+            connection: [dict] = []
+            nmbs_route = unpacked_data["connection"][0]["vias"]["via"]
+            for elem in nmbs_route:
+                mid_stop: dict = dict()
+                mid_stop["Name"] = elem["station"]
+                mid_stop["LocationX"] = elem["stationinfo"]["locationX"]
+                mid_stop["LocationY"] = elem["stationinfo"]["locationY"]
+                connection.append(mid_stop)
+
+            response["Route"] = connection
+
+        return jsonify(response)

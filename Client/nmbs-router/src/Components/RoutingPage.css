@@ -13,3 +13,10 @@
 
 .ToBar {
 }
+
+.RoutingButton {
+    position: absolute;
+    top: 12vh;
+    right: 4%;
+
+}

@@ -1,7 +1,9 @@
-.ButtonStyle {
-
+table {
+    border: 2px orangered;
 }
 
-table {
-  border: 2px orangered;
+.StationInfoStyle {
+    position: absolute;
+    left: 50%;
+    right: 50%;
 }
