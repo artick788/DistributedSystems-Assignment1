@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import "./SelectStationBar.css"
 import store from "../Store/Store";
 import {getStationInfo} from "../Station";
@@ -16,7 +15,7 @@ export default class SelectStationBar extends React.Component{
 
 
     render() {
-        if (store.getState().stations.length === 0){
+        if (!store.getState().stations){
             getStationInfo();
             return null;
         }

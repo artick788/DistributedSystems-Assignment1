@@ -1,9 +1,11 @@
+
 export let initialState = {
     stations: [],
     stationNames: [],
     fromStation: null,
     toStation: null,
-    selectedStation: null
+    selectedStation: null,
+    map: null
 }
 
 export default function reducer(state = initialState, action){

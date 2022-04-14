@@ -3,122 +3,92 @@ import urllib.request
 
 from flask import jsonify
 from flask_restful import Resource
-import datetime
+
+from .connection_resource import ConnectionResource
+from .station_api import get_stations
 
 
-def getCurrentTimeFormatted() -> str:
-    currentDT = datetime.datetime.now()
-    hour: str = str(currentDT.hour)
-    if len(hour) == 1:
-        hour: str = "0" + hour
-    minute: str = str(currentDT.minute)
-    if len(minute) == 1:
-        minute: str = "0" + minute
+class Via:
+    def __init__(self, name: str, location_x: str, location_y: str):
+        self.__name: str = name
+        self.__location_x: str = location_x
+        self.__location_y: str = location_y
 
-    return hour + minute
+    def to_dict(self):
+        ret_val: dict = dict()
+        ret_val["Name"] = self.__name
+        ret_val["LocationX"] = self.__location_x
+        ret_val["LocationY"] = self.__location_y
 
-
-def getCurrentDateFormatted() -> str:
-    currentDT = datetime.datetime.now()
-    year: str = str(currentDT.year)
-    year = year[2] + year[3]  # only use the decenium numbers
-    month: str = str(currentDT.month)
-    if len(month) == 1:
-        month = "0" + month
-    day: str = str(currentDT.day)
-    if len(day) == 1:
-        day = "0" + day
-
-    return day + month + year
+        return ret_val
 
 
-class Timesel:
-    DEPARTURE = 1
-    ARRIVAL = 2
+class Route:
+    def __init__(self, from_station: str, to_station: str):
+        self.__from_station_name: str = from_station
+        self.__to_station_name: str = to_station
 
+        self.__from_station_via: Via = None
+        self.__to_station_via: Via = None
 
-class TypeOfTransport:
-    AUTOMATIC = 1
-    TRAINS = 2
-    NO_INTERNATIONAL_TRAINS = 3
-    ALL = 4
+        self.__route: [Via] = []
 
+        self.__duration: int = 0
 
-class ConnectionResource:
-    def __init__(self, fromStation: str, toStation: str):
-        self.m_FromStation: str = fromStation
-        self.m_ToStation: str = toStation
-        self.m_TimeSel: int = Timesel.DEPARTURE
-        self.m_TypeOfTransport: int = TypeOfTransport.AUTOMATIC
-        self.m_Alerts: bool = False
-        self.m_Results: int = 6
-        self.m_Time: str = getCurrentTimeFormatted()
-        self.m_Date: str = getCurrentDateFormatted()
-        self.m_ResponseFormat: str = "json"
-        self.m_Lang: str = "en"
+    def __get_begin_end_station_as_via(self):
+        station_list: [dict] = get_stations()
+        for station in station_list:
+            name: str =  station["Name"]
+            if name == self.__from_station_name:
+                self.__from_station_via = Via(name, station["LocationX"], station["LocationY"])
+            elif name == self.__to_station_name:
+                self.__to_station_via = Via(name, station["LocationX"], station["LocationY"])
 
-    def timeselToString(self) -> str:
-        if self.m_TimeSel == Timesel.DEPARTURE:
-            return "departure"
-        else:
-            return "arrival"
+    def calculate_route(self, nmbs_base_url: str):
+        self.__get_begin_end_station_as_via()
+        self.__route.append(self.__from_station_via)
 
-    def typeOfTransportToString(self) -> str:
-        if self.m_TypeOfTransport == TypeOfTransport.AUTOMATIC:
-            return "automatic"
-        elif self.m_TypeOfTransport == TypeOfTransport.TRAINS:
-            return "trains"
-        elif self.m_TypeOfTransport == TypeOfTransport.NO_INTERNATIONAL_TRAINS:
-            return "nointernationaltrains"
-        else:
-            return "all"
+        conn_res: ConnectionResource = ConnectionResource(self.__from_station_name, self.__to_station_name)
+        url: str = nmbs_base_url + conn_res.format_uri()
+        response = urllib.request.urlopen(url)
+        unpacked_data = json.loads(response.read())
 
-    def alertsToString(self) -> str:
-        if self.m_Alerts:
-            return "true"
-        else:
-            return "false"
+        self.__duration = int(unpacked_data["connection"][0]["duration"])
 
-    def formatURI(self) -> str:
-        uri: str = "/connections/?"
-        uri += "from=" + self.m_FromStation + "&"
-        uri += "to=" + self.m_ToStation + "&"
-        uri += "date=" + self.m_Date + "&"
-        uri += "time=" + self.m_Time + "&"
-        uri += "timesel=" + self.timeselToString() + "&"
-        uri += "format=" + self.m_ResponseFormat + "&"
-        uri += "lang=" + self.m_Lang + "&"
-        uri += "typeOfTransport=" + self.typeOfTransportToString() + "&"
-        uri += "alerts=" + self.alertsToString() + "&"
-        uri += "results=" + str(self.m_Results)
+        nmbs_connection: dict = unpacked_data["connection"][0]
 
-        return uri
+        if "vias" in nmbs_connection:
+            nmbs_route = unpacked_data["connection"][0]["vias"]["via"]
+            for elem in nmbs_route:
+                name: str = elem["station"]
+                loc_x: str = elem["stationinfo"]["locationX"]
+                loc_y: str = elem["stationinfo"]["locationY"]
+                via: Via = Via(name, loc_x, loc_y)
+                self.__route.append(via)
 
+        self.__route.append(self.__to_station_via)
 
+    def to_dict(self):
+        ret_val: dict = dict()
+        ret_val["Success"] = "false"
+        if len(self.__route) > 0:
+            ret_val["Success"] = "true"
+            ret_val["Duration"] = str(self.__duration)
+
+            i_route: [dict] = []
+            for elem in self.__route:
+                i_route.append(elem.to_dict())
+
+            ret_val["Route"] = i_route
+
+        return ret_val
 
 
 class NmbsRouter(Resource):
     def get(self, from_station: str, to_station: str):
         url: str = "https://api.irail.be"
-        conn_res: ConnectionResource = ConnectionResource(from_station, to_station)
 
-        url += conn_res.formatURI()
-        response = urllib.request.urlopen(url)
-        unpacked_data = json.loads(response.read())
+        i_route: Route = Route(from_station, to_station)
+        i_route.calculate_route(url)
 
-        response: dict = dict()
-        response["Success"] = "false"
-        if len(unpacked_data["connection"]) > 0:
-            response["Success"] = "true"
-            connection: [dict] = []
-            nmbs_route = unpacked_data["connection"][0]["vias"]["via"]
-            for elem in nmbs_route:
-                mid_stop: dict = dict()
-                mid_stop["Name"] = elem["station"]
-                mid_stop["LocationX"] = elem["stationinfo"]["locationX"]
-                mid_stop["LocationY"] = elem["stationinfo"]["locationY"]
-                connection.append(mid_stop)
-
-            response["Route"] = connection
-
-        return jsonify(response)
+        return jsonify(i_route.to_dict())

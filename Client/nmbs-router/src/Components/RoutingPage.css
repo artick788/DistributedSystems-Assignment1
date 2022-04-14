@@ -1,22 +1,8 @@
 .Bars {
     position: absolute;
-    width: 700px;
+    width: 100%;
     top: 12vh;
     height: 84%;
     left: 4%;
     display: flex;
-}
-
-.FromBar {
-
-}
-
-.ToBar {
-}
-
-.RoutingButton {
-    position: absolute;
-    top: 12vh;
-    right: 4%;
-
 }
