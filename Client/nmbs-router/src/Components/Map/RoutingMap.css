@@ -16,6 +16,7 @@
 }
 
 .RoutingButton {
+    position: absolute;
     top: 10vh;
     right: 4%;
 

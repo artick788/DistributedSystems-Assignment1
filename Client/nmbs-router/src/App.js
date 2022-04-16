@@ -14,11 +14,9 @@ class App extends React.Component {
     constructor(props) {
         super(props);
 
-        axios.get("/api").then(response => {
-            console.log(response.data)
-        }).catch(error => {
-            console.log("Connection failed: " + error)
-        })
+        // ignore this annoying fix
+        store.dispatch({type: "stations", value: []});
+        store.dispatch({type: "stationNames", value: []});
 
         getStationInfo();
 

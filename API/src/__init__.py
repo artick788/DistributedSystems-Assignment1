@@ -17,6 +17,6 @@ def create_app() -> Flask:
     api.add_resource(HelloNMBS, "/api")
 
     api.add_resource(StationsList, "/api/stations")
-    api.add_resource(NmbsRouter, "/api/router/<from_station>/<to_station>")
+    api.add_resource(NmbsRouter, "/api/stations/<from_station>/<to_station>")
 
     return app

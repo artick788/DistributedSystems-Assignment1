@@ -32,7 +32,7 @@ export default class RoutingMap extends React.PureComponent{
             const fromName = store.getState().fromStation.m_Name
             const toName = store.getState().toStation.m_Name
             if (fromName !== toName){
-                const uri = "/api/router/" + fromName + "/" + toName
+                const uri = "/api/stations/" + fromName + "/" + toName
                 axios.get(uri).then(response => {
                     if (response.data.Success === "true"){
                         const route = response.data.Route;
