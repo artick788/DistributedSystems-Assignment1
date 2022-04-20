@@ -1,9 +1,10 @@
 .MapContainer {
-    min-width: 300px;
-    min-height: 500px;
+    width: 35vw;
+    margin-right: 5vw;
+
 }
 
-.SideBar {
+.MapInfoBar {
     background-color: rgba(35, 55, 75, 0.9);
     color: #fff;
     padding: 6px 12px;
@@ -12,12 +13,13 @@
     position: absolute;
     margin: 12px;
     border-radius: 4px;
-    max-width: 250px;
+    max-width: 35vw;
 }
 
 .RoutingButton {
     position: absolute;
     top: 10vh;
     right: 4%;
-
+    z-index: 2;
+    margin-right: 2vw;
 }

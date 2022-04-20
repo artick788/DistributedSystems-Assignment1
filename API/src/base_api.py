@@ -4,7 +4,7 @@ from datetime import datetime
 
 class HelloNMBS(Resource):
     def get(self):
-        return "Router API"
+        return "NMBS Router API"
 
 
 class Time(Resource):

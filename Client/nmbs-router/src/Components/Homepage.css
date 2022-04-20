@@ -1,0 +1,17 @@
+.GreetingStyle{
+    position: absolute;
+    top: 50%;
+    right: 50%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: rightSlide 0.3s;
+    color: orangered;
+    border: solid;
+    border-radius: 15px;
+}
+
+.NavLinkStyle{
+
+}

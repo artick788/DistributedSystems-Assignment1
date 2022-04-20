@@ -144,7 +144,7 @@ export default class RoutingMap extends React.PureComponent{
                 <List>
                     <ListItem>
                         <Typography variant="h6">
-                            Duration: {this.state.duration}
+                            Duration: {new Date(this.state.duration * 1000).toISOString().substr(11, 8)}
                         </Typography>
                     </ListItem>
                     <ListItem>
@@ -178,7 +178,7 @@ export default class RoutingMap extends React.PureComponent{
                         Calculate Route
                     </Button>
                 </div>
-                <div className="SideBar">
+                <div className="MapInfoBar">
                     Longitude: {this.state.longitude} | Latitude: {this.state.latitude} | Zoom: {this.state.zoom}
                 </div>
                 <div ref={this.mapContainer} className="BarStyle MapContainer" />
