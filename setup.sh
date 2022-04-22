@@ -1,11 +1,11 @@
 #!/bin/sh
 
-apt install python3 nodejs
+apt install python3 nodejs curl python3-pip
 
 cd API
 
 virtualenv -p python3 venv
-source venv/bin/activate
+. venv/bin/activate
 pip3 install -r requirements.txt
 
 cd ../Client/nmbs-router
