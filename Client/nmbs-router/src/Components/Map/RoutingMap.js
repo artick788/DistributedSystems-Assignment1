@@ -53,6 +53,9 @@ export default class RoutingMap extends React.PureComponent{
                     }
                 )
             }
+            else{
+                console.warn("Begin station is the same as end station");
+            }
         }
     }
 

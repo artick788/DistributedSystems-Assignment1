@@ -75,9 +75,13 @@ class ConnectionResource:
             return "false"
 
     def format_uri(self) -> str:
+        # NMBS API expects spaces as %20
+        from_station: str = self.m_FromStation.replace(' ', "%20")
+        to_station: str = self.m_ToStation.replace(' ', '%20')
+
         uri: str = "/connections/?"
-        uri += "from=" + self.m_FromStation + "&"
-        uri += "to=" + self.m_ToStation + "&"
+        uri += "from=" + from_station + "&"
+        uri += "to=" + to_station + "&"
         uri += "date=" + self.m_Date + "&"
         uri += "time=" + self.m_Time + "&"
         uri += "timesel=" + self.timesel_to_string() + "&"
