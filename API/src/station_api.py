@@ -3,6 +3,7 @@ import urllib.request
 
 from flask import jsonify
 from flask_restful import Resource
+from flasgger.utils import swag_from
 
 
 def get_stations() -> [dict]:
@@ -28,6 +29,6 @@ def get_stations() -> [dict]:
 
 
 class StationsList(Resource):
-
+    @swag_from("Documentation/station_api_doc.yml")
     def get(self):
         return jsonify(get_stations())

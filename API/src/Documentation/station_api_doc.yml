@@ -1,0 +1,23 @@
+summary: "Station info endpoint"
+description: "This endpoint is used to retrieve all the info of all the stations managed by the NMBS. It will return
+a list containing station objects which contains the name, coordinates, ID"
+produces:
+- "application/json"
+responses:
+  200:
+    description: "Success"
+    schema:
+      type: "array"
+      items:
+        type: "object"
+        properties:
+          ID:
+            type: "string"
+          LocationX:
+            type: "string"
+          LocationY:
+            type: "string"
+          Name:
+            type: "string"
+          StandardName:
+            type: "string"

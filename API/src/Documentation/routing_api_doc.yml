@@ -1,0 +1,42 @@
+summary: "Routing API endpoint"
+description: "This endpoint is used to calculate a route and travel time between two NMBS stations. The names are supplied
+in the URI, first the start station is given followed by the end station. The names must be valid NMBS stations. They 
+must also be found in the list of stations retrieved from /api/stations"
+produces:
+- "application/json"
+parameters:
+  - in: "query"
+    name: "from_station"
+    type: "string"
+    required: "true"
+    description: "This is the station where the route will be calculated from"
+  - in: "query"
+    name: "to_station"
+    type: "string"
+    required: "true"
+    description: "This is the station where the route will end"
+responses:
+  200:
+    description: "Success"
+    schema:
+      type: "object"
+      properties:
+        Duration:
+          type: "string"
+          example: "5220"
+        Route:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              LocationX:
+                type: "string"
+                example: "4.039653"
+              LocationY:
+                type: "string"
+                example: "50.942813"
+              Name:
+                type: "string"
+                example: "Aalst"
+        Success:
+          type: "boolean"

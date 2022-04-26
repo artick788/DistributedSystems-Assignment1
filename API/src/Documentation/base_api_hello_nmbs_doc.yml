@@ -1,0 +1,11 @@
+summary: "First API endpoint"
+description: "This is the first endpoint. It will only return a message and can be used to test the connection with the API"
+produces:
+- "application/json"
+responses:
+  200:
+    description: "Success"
+    schema:
+      properties:
+        Message:
+          type: "string"

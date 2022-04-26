@@ -5,6 +5,13 @@ of a simple Flask API that communicates with the NMBS API (the belgium train com
 end, you can see a list of all the train stations in Belgium and view information over each station (such as name, 
 coordinates, ...). You can also view a route between 2 selected stations by train and by car and see the traveltime.
 
+## Documentation
+After setting up the project and starting the backend, you can go to 
+```
+http://127.0.0.1:5000/apidocs/
+```
+to see a Swagger documentation of the API. Every URI endpoint is explained and provided with an example.
+
 ## Setup
 There is a shell script that can be found in the root directory of the project. This will install all necessary dependencies,
 create the necessary environments. The script can be executed using the following command

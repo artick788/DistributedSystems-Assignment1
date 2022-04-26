@@ -1,0 +1,11 @@
+summary: "First URI endpoint"
+description: "The first endpoint in the URI tree structure. It will return the time formatted as: Day month year weekday"
+produces:
+- "application/json"
+responses:
+  200:
+    description: "Success"
+    schema:
+      properties:
+        Time:
+          type: "string"

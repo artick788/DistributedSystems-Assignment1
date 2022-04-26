@@ -3,6 +3,7 @@ import urllib.request
 
 from flask import jsonify
 from flask_restful import Resource
+from flasgger.utils import swag_from
 
 from .connection_resource import ConnectionResource
 from .station_api import get_stations
@@ -88,6 +89,7 @@ class Route:
 
 
 class NmbsRouter(Resource):
+    @swag_from("Documentation/routing_api_doc.yml")
     def get(self, from_station: str, to_station: str):
         url: str = "https://api.irail.be"
 
