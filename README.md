@@ -13,7 +13,7 @@ http://127.0.0.1:5000/apidocs/
 to see a Swagger documentation of the API. Every URI endpoint is explained and provided with an example.
 
 ## Setup
-There is a shell script that can be found in the root directory of the project. This will install all necessary dependencies,
+There is a shell script that can be found in the root directory of the project called setup.sh. This will install all necessary dependencies,
 create the necessary environments. The script can be executed using the following command
 ````bash
 sudo chmod u+x ./setup.sh
@@ -45,6 +45,14 @@ npm i
 ```
 
 ## Run
+There is a script in the root of the project called start.sh. This script will launch the python Flask backend and start
+the React front-end. This script sometimes fails to start the front-end (I don't know why though). Manually starting the 
+front-end will work normally. The script can be run by executing following commands
+````bash
+sudo chmod u+x ./start.sh
+sudo ./start.sh
+````
+
 ### 1. Start Back-end (Flask)
 The python backend can be started using the following command (executed in the root directory of the project)
  ```bash

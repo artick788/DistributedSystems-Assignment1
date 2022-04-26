@@ -2,5 +2,4 @@
 
 python3 API/main.py &
 
-cd Client/nmbs-router
-npm start
+npm start --prefix Client/nmbs-router
