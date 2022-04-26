@@ -46,8 +46,8 @@ npm i
 
 ## Run
 There is a script in the root of the project called start.sh. This script will launch the python Flask backend and start
-the React front-end. This script sometimes fails to start the front-end (I don't know why though). Manually starting the 
-front-end will work normally. The script can be run by executing following commands
+the React front-end. This script sometimes fails to start the front-end (I don't know why though). it then exits with the error that the function
+Module.createRequire does not exist but when starting the front end normally, the error goes away. The script can be run by executing following commands.
 ````bash
 sudo chmod u+x ./start.sh
 sudo ./start.sh
