@@ -20,7 +20,8 @@ export default class RoutingMap extends React.PureComponent{
             zoom: 8,
             route: [],
             visitedStations: [],
-            duration: 0,
+            trainDuration: 0,
+            autoDuration: 0
         }
 
         this.mapContainer = React.createRef();
@@ -31,31 +32,23 @@ export default class RoutingMap extends React.PureComponent{
         if (store.getState().fromStation !== null && store.getState().toStation !== null){
             const fromName = store.getState().fromStation.m_Name
             const toName = store.getState().toStation.m_Name
-            if (fromName !== toName){
-                const uri = "/api/stations/" + fromName + "/" + toName
-                axios.get(uri).then(response => {
-                    if (response.data.Success === "true"){
-                        const route = response.data.Route;
-                        let tempLocs = [];
-                        let tempVisited = [];
+            const uri = "/api/stations/" + fromName + "/" + toName
+            axios.get(uri).then(response => {
+                if (response.data.Success === "true"){
+                    const route = response.data.Route;
+                    let tempLocs = [];
+                    let tempVisited = [];
 
-                        for (let i = 0; i < route.length; i++){
-                            const pos = [route[i].LocationX, route[i].LocationY]
-                            tempLocs.push(pos)
-                            tempVisited.push(route[i].Name);
-                        }
+                    for (let i = 0; i < route.length; i++){
+                        const pos = [route[i].LocationX, route[i].LocationY]
+                        tempLocs.push(pos)
+                        tempVisited.push(route[i].Name);
+                    }
 
-                        this.setState({...this.state, route: tempLocs, duration: response.data.Duration})
-                    }
-                }).catch(
-                    error => {
-                        console.log(error);
-                    }
-                )
-            }
-            else{
-                console.warn("Begin station is the same as end station");
-            }
+                    this.setState({...this.state, route: tempLocs, trainDuration: response.data.Duration})
+                }
+            }).catch( error => { console.log(error)} )
+
         }
     }
 
@@ -110,6 +103,10 @@ export default class RoutingMap extends React.PureComponent{
                 method: 'get',
                 url: url
             }).then((response) => {
+                if (response.data.routes.length > 0){
+                    const duration = response.data.routes[0].duration;
+                    this.setState({...this.state, autoDuration: duration});
+                }
                 return response.data;
             }).catch((e) => {
                 console.warn(e);
@@ -144,24 +141,50 @@ export default class RoutingMap extends React.PureComponent{
     renderRouteInfo(){
         if (this.state.route.length !== 0){
             return (
-                <List>
-                    <ListItem>
-                        <Typography variant="h6">
-                            Duration: {new Date(this.state.duration * 1000).toISOString().substr(11, 8)}
-                        </Typography>
-                    </ListItem>
-                    <ListItem>
-                        <Typography variant="h6">
-                            Train Route: Orange
-                        </Typography>
-                    </ListItem>
-                     <ListItem>
-                        <Typography variant="h6">
-                           Auto Route: Black
-                        </Typography>
-                    </ListItem>
-                </List>
+                <div>
+                    <table>
+                        <tr>
+                            <th> Transport Type </th>
+                            <th> By Auto </th>
+                            <th> By Train </th>
+                        </tr>
+                        <tr>
+                            <td> Map route color </td>
+                            <td> Black </td>
+                            <td> Orange </td>
+                        </tr>
+                        <tr>
+                            <td> Duration </td>
+                            <td> {new Date(this.state.autoDuration * 1000).toISOString().substr(11, 8)} </td>
+                            <td> {new Date(this.state.trainDuration * 1000).toISOString().substr(11, 8)} </td>
+                        </tr>
+                    </table>
+                </div>
             )
+            // return (
+            //     <List>
+            //         <ListItem>
+            //             <Typography variant="h6">
+            //                 Train Duration: {new Date(this.state.trainDuration * 1000).toISOString().substr(11, 8)}
+            //             </Typography>
+            //         </ListItem>
+            //         <ListItem>
+            //             <Typography variant="h6">
+            //                 Auto Duration: {new Date(this.state.autoDuration * 1000).toISOString().substr(11, 8)}
+            //             </Typography>
+            //         </ListItem>
+            //         <ListItem>
+            //             <Typography variant="h6">
+            //                 Train Route: Orange
+            //             </Typography>
+            //         </ListItem>
+            //          <ListItem>
+            //             <Typography variant="h6">
+            //                Auto Route: Black
+            //             </Typography>
+            //         </ListItem>
+            //     </List>
+            // )
         }
         else{
             return null;

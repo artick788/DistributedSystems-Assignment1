@@ -23,3 +23,8 @@
     z-index: 2;
     margin-right: 2vw;
 }
+
+table, th, td {
+    border: 1px solid black;
+    margin: 3px;
+}

@@ -48,25 +48,28 @@ class Route:
         self.__get_begin_end_station_as_via()
         self.__route.append(self.__from_station_via)
 
-        conn_res: ConnectionResource = ConnectionResource(self.__from_station_name, self.__to_station_name)
-        url: str = nmbs_base_url + conn_res.format_uri()
-        response = urllib.request.urlopen(url)
-        unpacked_data = json.loads(response.read())
+        if self.__from_station_name != self.__to_station_name:
+            conn_res: ConnectionResource = ConnectionResource(self.__from_station_name, self.__to_station_name)
+            url: str = nmbs_base_url + conn_res.format_uri()
+            response = urllib.request.urlopen(url)
+            unpacked_data = json.loads(response.read())
 
-        self.__duration = int(unpacked_data["connection"][0]["duration"])
+            self.__duration = int(unpacked_data["connection"][0]["duration"])
 
-        nmbs_connection: dict = unpacked_data["connection"][0]
+            nmbs_connection: dict = unpacked_data["connection"][0]
 
-        if "vias" in nmbs_connection:
-            nmbs_route = unpacked_data["connection"][0]["vias"]["via"]
-            for elem in nmbs_route:
-                name: str = elem["station"]
-                loc_x: str = elem["stationinfo"]["locationX"]
-                loc_y: str = elem["stationinfo"]["locationY"]
-                via: Via = Via(name, loc_x, loc_y)
-                self.__route.append(via)
+            if "vias" in nmbs_connection:
+                nmbs_route = unpacked_data["connection"][0]["vias"]["via"]
+                for elem in nmbs_route:
+                    name: str = elem["station"]
+                    loc_x: str = elem["stationinfo"]["locationX"]
+                    loc_y: str = elem["stationinfo"]["locationY"]
+                    via: Via = Via(name, loc_x, loc_y)
+                    self.__route.append(via)
 
-        self.__route.append(self.__to_station_via)
+            self.__route.append(self.__to_station_via)
+        else:
+            self.__duration = 0
 
     def to_dict(self):
         ret_val: dict = dict()
